@@ -4,7 +4,7 @@ TEST PROJECT
 CRUD
 """
 
-
+#---------------------------------------------------------------------------------------------------------------------
 def try_is_customer_exists(func):
     def wrapper(self, *args):
         try:
@@ -14,8 +14,32 @@ def try_is_customer_exists(func):
         except:
             print 'ERRROR!'
     return wrapper
+#---------------------------------------------------------------------------------------------------------------------
+def print_menu():
+    CRUD_DICT = {1: 'Create phone number', 2: 'Get phone number by name',
+                 3: 'Get customer name by phone', 4: 'Delete phone number by name',
+                 5: 'Show all phones on a book',
+                 0: 'Exit'}
 
+    for i, text in CRUD_DICT.items():
+        print str(i) + " : " + text
 
+    try:
+        choice = int(raw_input('Input your choice:'))
+    except ValueError:
+        print 'Wrong input!'
+        choice = 9999
+
+    return choice
+#---------------------------------------------------------------------------------------------------------------------
+def input_phone_number():
+    phone_number = str(raw_input())
+
+    while not phone_number.isdigit():
+        print 'WARN Inocrrect msisdn. Please retry.'
+        phone_number = str(raw_input())
+    return phone_number
+#---------------------------------------------------------------------------------------------------------------------
 class phone_book(object):
     def __init__(self):
         self.phone_number_dic = {}
@@ -49,47 +73,14 @@ class phone_book(object):
             if item_customer == customer:
                 del self.phone_number_dic[item_phone]
         raise NameError('No such subscriber')
-
-
-
-
-
-def print_menu():
-    CRUD_DICT = {1: 'Create phone number', 2: 'Get phone number by name',
-                 3: 'Get customer name by phone', 4: 'Delete phone number by name',
-                 5: 'Show all phones on a book',
-                 0: 'Exit'}
-
-    for i, text in CRUD_DICT.items():
-        print str(i) + " : " + text
-
-    try:
-        choice = int(raw_input('Input your choice:'))
-    except ValueError:
-        print 'Wrong input!'
-        choice = 9999
-
-    return choice
+#---------------------------------------------------------------------------------------------------------------------
 
 book = phone_book()
 
 print 'Please choose what to do: '
 choice = 2
 
-
-def input_phone_number():
-    phone_number = str(raw_input())
-
-    while not phone_number.isdigit():
-        print 'WARN Inocrrect msisdn. Please retry.'
-        phone_number = str(raw_input())
-    return phone_number
-
-
-
-
-
-
+#---------------------------------------------------------------------------------------------------------------------
 
 
 while choice != 0:
@@ -114,9 +105,7 @@ while choice != 0:
         print '1. Please input customer name: '
         customer = raw_input()
 
-
         subscriber_item = book.get_phone_by_subscriber(customer)
-
 
         try:
             print '{}:{}'.format(subscriber_item[0],subscriber_item[1])
@@ -128,15 +117,12 @@ while choice != 0:
     """Get customer name by phone"""
     if choice == 3:
         print '1. Please input msisdn: '
-        phone_number = raw_input()
+        phone_number = input_phone_number()
 
         try:
             subscriber = book.get_subscriber_by_phone(phone_number)
         except TypeError:
             pass
-
-
-
 
 
 
@@ -164,12 +150,6 @@ while choice != 0:
         dic = book.get_phone_book()
         for phone, name in dic.items():
             print '{}:{}'.format(name, phone)
-
-
-
-
-
-
 
 
     print '-----------------------------------------------------------------'

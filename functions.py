@@ -23,3 +23,6 @@
 
 # soc seperation of consorns
 # KISS principle
+# DRY
+
+# LEGB
