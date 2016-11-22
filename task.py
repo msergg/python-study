@@ -45,6 +45,7 @@ class phone_book(object):
         self.phone_number_dic = {}
 
     def add_new_subscriber(self, phone_number, subscriber):
+        """Create phone number'"""
         self.phone_number_dic[phone_number] = subscriber
 
     def get_phone_book(self):
@@ -52,7 +53,7 @@ class phone_book(object):
 
     @try_is_customer_exists
     def get_subscriber_by_phone(self, phone_number):
-
+        """Get customer name by phone"""
         try:
             subscriber = self.phone_number_dic[phone_number]
             return subscriber
@@ -62,6 +63,7 @@ class phone_book(object):
 
     @try_is_customer_exists
     def get_phone_by_subscriber(self, subscriber):
+        """Get phone number by name"""
         for item_phone, item_customer in self.phone_number_dic.items():
             if item_customer == subscriber:
                 return (item_phone, item_customer)
@@ -69,6 +71,7 @@ class phone_book(object):
 
     @try_is_customer_exists
     def delete_customer_by_name(self, subscriber):
+        """Delete phone number by name"""
         for item_phone, item_customer in self.phone_number_dic.items():
             if item_customer == customer:
                 del self.phone_number_dic[item_phone]
