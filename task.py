@@ -28,7 +28,7 @@ class phone_book(object):
     def get_subscriber_by_phone(self, phone_number):
         subscriber = self.phone_number_dic[phone_number]
         if not subscriber:
-            raise NameError('NoSubscriber')
+            raise NameError('No such subscriber')
         return subscriber
 
     @try_is_customer_exists
@@ -36,7 +36,7 @@ class phone_book(object):
         for item_phone, item_customer in self.phone_number_dic.items():
             if item_customer == subscriber:
                 return (item_phone, item_customer)
-        raise NameError('NoSubscriber')
+        raise NameError('No such subscriber')
 
     @try_is_customer_exists
     def delete_customer_by_name(self, subscriber):
@@ -44,7 +44,7 @@ class phone_book(object):
             if item_customer == customer:
                 del self.phone_number_dic[item_phone]
 
-        raise NameError('NoSubscriber')
+        raise NameError('No such subscriber')
 
 
 
@@ -106,11 +106,16 @@ while choice != 0:
 
 
         subscriber_item = book.get_phone_by_subscriber(customer)
-        print '{}:{}'.format(subscriber_item[0],subscriber_item[1])
+
+
+        try:
+            print '{}:{}'.format(subscriber_item[0],subscriber_item[1])
+        except TypeError:
+            pass
+
 
 
     """Get customer name by phone"""
-
     if choice == 3:
         print '1. Please input msisdn: '
         phone_number = raw_input()
@@ -120,7 +125,6 @@ while choice != 0:
 
 
     """Delete phone number by name"""
-
     if choice == 4:
         print '1. Please input customer name to delete: '
         subscriber = raw_input()
