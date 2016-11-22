@@ -27,7 +27,7 @@
 
 # LEGB
 
-
+"""test 1"""
 # python -m doctest add.py
 def odd(x):
     """
@@ -36,7 +36,6 @@ def odd(x):
     1
     >>> odd(5)
     0
-
     """
     return x % 2
 
@@ -66,3 +65,4 @@ def odd(x):
 # pydoc -w *.py
 
 # python -m doctest add.py
+# BuildBot
