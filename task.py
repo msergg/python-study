@@ -11,6 +11,8 @@ def try_is_customer_exists(func):
             return func(self, *args)
         except NameError as e:
             print e
+        except:
+            print 'ERRROR!'
     return wrapper
 
 
@@ -26,10 +28,13 @@ class phone_book(object):
 
     @try_is_customer_exists
     def get_subscriber_by_phone(self, phone_number):
-        subscriber = self.phone_number_dic[phone_number]
-        if not subscriber:
+
+        try:
+            subscriber = self.phone_number_dic[phone_number]
+            return subscriber
+        except:
             raise NameError('No such subscriber')
-        return subscriber
+
 
     @try_is_customer_exists
     def get_phone_by_subscriber(self, subscriber):
@@ -43,7 +48,6 @@ class phone_book(object):
         for item_phone, item_customer in self.phone_number_dic.items():
             if item_customer == customer:
                 del self.phone_number_dic[item_phone]
-
         raise NameError('No such subscriber')
 
 
@@ -67,21 +71,25 @@ def print_menu():
 
     return choice
 
-
-
-
-
-
-
-
-
-
-
 book = phone_book()
-
 
 print 'Please choose what to do: '
 choice = 2
+
+
+def input_phone_number():
+    phone_number = str(raw_input())
+
+    while not phone_number.isdigit():
+        print 'WARN Inocrrect msisdn. Please retry.'
+        phone_number = str(raw_input())
+    return phone_number
+
+
+
+
+
+
 
 
 while choice != 0:
@@ -92,11 +100,13 @@ while choice != 0:
     """Create phone number'"""
     if choice == 1:
         print '1. Please input phone number: '
-        phone_number = raw_input()
+        phone_number = input_phone_number()
         print '2. Please input customer name: '
         customer = raw_input()
 
         book.add_new_subscriber(phone_number, customer)
+
+        print "OK."
 
 
     """Get phone number by name"""
@@ -120,7 +130,14 @@ while choice != 0:
         print '1. Please input msisdn: '
         phone_number = raw_input()
 
-        result = book.get_subscriber_by_phone(phone_number)
+        try:
+            subscriber = book.get_subscriber_by_phone(phone_number)
+        except TypeError:
+            pass
+
+
+
+
 
 
 
@@ -131,8 +148,14 @@ while choice != 0:
 
         result = book.delete_customer_by_name(subscriber)
 
+
+
         if result == 1:
-            print 'Subscribers {} phone deleted'.format(subscriber)
+            try:
+                print 'Subscribers {} phone deleted'.format(subscriber)
+            except TypeError:
+                pass
+
         else:
             print 'There is no such subscriber'
 
