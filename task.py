@@ -3,6 +3,8 @@ TEST PROJECT
 
 CRUD
 """
+import json
+import hashlib
 
 #---------------------------------------------------------------------------------------------------------------------
 def try_is_customer_exists(func):
@@ -43,6 +45,46 @@ def input_phone_number():
 class phone_book(object):
     def __init__(self):
         self.phone_number_dic = {}
+        self.phone_db_state_hash = ''
+
+        try:
+            self.load_phone_book_to_file()
+        except:
+            print 'ERROR Can`t read phonebookDB!'
+            self.phone_number_dic = {}
+        self.update_phone_db_state_hash()
+
+
+
+    def _get_phone_db_state_hash_now(self):
+        return hashlib.sha1(json.dumps(self.phone_number_dic)).hexdigest()
+
+    def _get_phone_db_state_hash_last(self):
+        return self.phone_db_state_hash
+
+    def update_phone_db_state_hash(self):
+        self.phone_db_state_hash = self._get_phone_db_state_hash_now()
+
+    def is_actual(self):
+        return self._get_phone_db_state_hash_last() == self._get_phone_db_state_hash_now()
+
+
+    def save_phone_book_to_file(self):
+        # Need to add implementation not to save if file was not changed
+        if not self.is_actual():
+            f = open("phonebook.db", 'w')
+            str_to_file = json.dumps(self.phone_number_dic)
+            f.write(str_to_file)
+            f.close()
+            self.update_phone_db_state_hash()
+
+
+
+    def load_phone_book_to_file(self):
+        f = open("phonebook.db", 'r')
+        str_to_file = f.read()
+        self.phone_number_dic = json.loads(str_to_file)
+        f.close()
 
     def add_new_subscriber(self, phone_number, subscriber):
         """Create phone number'"""
@@ -73,8 +115,9 @@ class phone_book(object):
     def delete_customer_by_name(self, subscriber):
         """Delete phone number by name"""
         for item_phone, item_customer in self.phone_number_dic.items():
-            if item_customer == customer:
+            if item_customer == subscriber:
                 del self.phone_number_dic[item_phone]
+                return ### FIX!!
         raise NameError('No such subscriber')
 #---------------------------------------------------------------------------------------------------------------------
 
@@ -134,24 +177,26 @@ while choice != 0:
         print '1. Please input customer name to delete: '
         subscriber = raw_input()
 
-        result = book.delete_customer_by_name(subscriber)
+        try:
+            book.delete_customer_by_name(subscriber)
+            print 'Subscribers {} phone deleted'.format(subscriber)
+        except TypeError:
+            pass
 
 
 
-        if result == 1:
-            try:
-                print 'Subscribers {} phone deleted'.format(subscriber)
-            except TypeError:
-                pass
 
-        else:
-            print 'There is no such subscriber'
 
     """Show all phones on a book"""
     if choice == 5:
         dic = book.get_phone_book()
         for phone, name in dic.items():
             print '{}:{}'.format(name, phone)
+
+
+
+    print book.phone_db_state_hash
+    book.save_phone_book_to_file()
 
 
     print '-----------------------------------------------------------------'
@@ -169,6 +214,34 @@ while choice != 0:
 
 
 
+# Need to do
+#
+# def f_a():
+#     print 'Func a'
+#
+#
+# def f_b():
+#     print 'Func b'
+#
+#
+# def f_c():
+#     print 'Func c'
+#
+#
+# action = raw_input('?')
+#
+#
+#
+# d = {'a': f_a, 'b': f_b, 'c': f_c}
+#
+# def default():
+#     print 'Default'
+#
+# d.get(action, default)()
+
+
+
+# Make phone_number_dic and object contains dictionary
 
 
 

@@ -193,7 +193,98 @@ l.sort(key=operator.itemgetter(1))
 
 l.sort(key=operator.attrgetter())
 
+#iterator
+type(a)
+a = reversed(l)
+a.next()
+# type 'listreverseiterator'
 
 
 
 
+
+
+
+
+# decorators
+
+
+
+
+
+def scale(f):
+    def wrapper(x):
+        print "In"
+        res = f(x / 100.0)
+        print "Out"
+        return res
+    print "Scale"
+    return wrapper
+
+
+
+def scale(k):
+    def decorator(f):
+        def wrapper(x):
+            return f(k * x)
+        return wrapper
+    return decorator
+
+
+
+def get_area(x):
+    return x * x
+
+get_area = scale(get_area)
+
+
+# @scale(5) :    get-area = scale(5)(get_area)
+
+@scale(5)
+def get_area(x):
+    return x * x
+
+
+
+
+def logger(f):
+    def wrapper(*args, **kwargs):
+        print "Params: {}, {}".format(args, kwargs)
+        res = f(*args, **kwargs)
+        print "Result: {}".format(res)
+        return res
+    return wrapper
+
+
+@logger
+def f(a,b,c):
+    return a + b + c
+
+
+
+
+
+
+
+def f_a():
+    print 'Func a'
+
+
+def f_b():
+    print 'Func b'
+
+
+def f_c():
+    print 'Func c'
+
+
+action = raw_input('?')
+
+
+
+d = {'a': f_a, 'b': f_b, 'c': f_c}
+
+def default():
+    print 'Default'
+
+d.get(action, default)()
