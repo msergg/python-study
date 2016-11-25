@@ -66,3 +66,134 @@ def odd(x):
 
 # python -m doctest add.py
 # BuildBot
+
+
+#
+#
+# def f(*args, **kwargs):
+#     print args, kwargs
+#
+#
+# def sum_(*args):
+#     s = 0
+#     for i in args:
+#         s+= i
+#     return s
+#
+#
+#
+# def sum_(a, *args):
+#     for i in args:
+#         a+= i
+#     return a
+#
+#
+# def f(a, b, c):
+#     return a + b + c
+#
+# t = (1,2,3)
+# d = {'a': 2, 'b': 4, 'c':5}
+# f(**d)
+# f(*t)
+
+
+
+def f():
+    def g(x):
+        return 2 * x
+    return g
+
+double = f()
+f(3)
+
+
+
+a = 5
+def f():
+    b = a
+    def g(x):
+        return b + x
+    return  g
+
+dir(mul)
+
+# Closures
+
+def mul(x):
+    def g(y):
+        return  y * x
+    return g
+
+
+double = mul(2)
+triple = mul(3)
+
+
+
+
+
+
+
+l = []
+for i in range(10):
+    def f(x, a=i):
+        return a * x
+    l.append(f)
+
+
+l[3](3)
+
+
+
+
+
+
+# Carring, function composition
+
+def mul(a, x):
+    return a * x
+
+
+
+import functools
+double = functools.partial(mul, 2)
+
+import operator
+
+double = functools.partial(operator.mul, 2)
+
+
+
+def composition(f, g):
+    return lambda x: f(g(x))
+
+quadruple = composition(double, double)
+quadruple(4)
+
+type(1) == int
+isinstance(1,(int,float))
+
+def odd(x):
+    return x % 2
+
+even = composition(operator.not_, odd)
+
+
+l = [(1,2), (2,3), (3,4), (4,5)]
+
+l.sort(key=lambda x:x[1])
+
+
+import random
+
+random.shuffle(l)
+
+
+l.sort(key=operator.itemgetter(1))
+
+l.sort(key=operator.attrgetter())
+
+
+
+
+
