@@ -1,5 +1,7 @@
+# coding utf-8
 from phone_book_file_db import PhoneBookFileDb
 import json
+
 
 class PhoneBookFileDbJSON(PhoneBookFileDb):
     def save_phone_book_to_file(self, book):

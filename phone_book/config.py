@@ -1,4 +1,6 @@
+# coding utf-8
 import ConfigParser
+
 
 class ConfigParameters(object):
     def __init__(self):
@@ -14,9 +16,6 @@ class ConfigParameters(object):
             return file_type
         except:
             return 'json'
-
-
-
 
 # config = ConfigParser.RawConfigParser()
 #

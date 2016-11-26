@@ -1,3 +1,4 @@
+# coding utf-8
 
 
 class PhoneBook(object):
@@ -44,4 +45,3 @@ class PhoneBook(object):
                 del self.phone_number_dic[item_phone]
                 return
         raise NameError('No such subscriber')
-

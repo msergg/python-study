@@ -1,14 +1,17 @@
+# coding utf-8
 from phone_book_file_db import PhoneBookFileDb
 import csv
 
-class PhoneBookFileDbCSV(PhoneBookFileDb):
 
+class PhoneBookFileDbCSV(PhoneBookFileDb):
     def save_phone_book_to_file(self, book):
         self.phone_number_dic = book.phone_number_dic
         if not self.is_actual():
             with open('phonebook.csv', 'wb') as csvfile:
-                writer = csv.writer(csvfile, delimiter=',',
-                                        quotechar='|', quoting=csv.QUOTE_MINIMAL)
+                writer = csv.writer(csvfile,
+                                    delimiter=',',
+                                    quotechar='|',
+                                    quoting=csv.QUOTE_MINIMAL)
                 for msisdn, subscriber in self.phone_number_dic.items():
                     writer.writerow([msisdn, subscriber])
                 csvfile.close()
