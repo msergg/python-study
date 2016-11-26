@@ -105,7 +105,11 @@ class PhoneBookViewController(object):
         phone_number_u = phone_number.decode('utf-8')
         try:
             subscriber = self.book.get_subscriber_by_phone(phone_number_u)
-            print subscriber
+            phone_number_unicode = phone_number.center(21).decode('utf-8')
+            subscriber_unicode = subscriber.center(21).decode('utf-8')
+            print '|------Subscriber------|-----Phone number-----|'
+            print '| {}|{} |'.format(subscriber_unicode, phone_number_unicode)
+            print '|----------------------|----------------------|'
         except NameError:
             pass
 
