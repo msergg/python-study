@@ -1,9 +1,13 @@
 from phone_book import PhoneBook
+from phone_book_file_db import PhoneBookFileDb
 
 
 class PhoneBookViewController(object):
     def __init__(self):
         self.book = PhoneBook()
+        self.phone_book_file_db = PhoneBookFileDb()
+        self.phone_book_file_db.load_phone_book_from_file(self.book)
+
         self.controller = {1: self._create_phone_number,
                            2: self._get_phone_by_name,
                            3: self._get_customer_by_phone,
@@ -44,6 +48,8 @@ class PhoneBookViewController(object):
     @catch_name_error
     def start_action(self, choice):
         self.controller.get(choice, self._default_choice)()
+        self.phone_book_file_db.save_phone_book_to_file(self.book)
+
 
     @staticmethod
     def _input_phone_number():

@@ -6,8 +6,6 @@ choice = 2
 controller = PhoneBookViewController()
 
 while choice != 0:
-
     choice = PhoneBookViewController().print_menu()
     controller.start_action(choice)
-    controller.book.save_phone_book_to_file()
     print '-----------------------------------------------------------------'
