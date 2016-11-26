@@ -6,16 +6,8 @@ CRUD
 import json
 import hashlib
 
-#---------------------------------------------------------------------------------------------------------------------
-def try_is_customer_exists(func):
-    def wrapper(self, *args):
-        try:
-            return func(self, *args)
-        except NameError as e:
-            print e
-        except:
-            print 'ERRROR!'
-    return wrapper
+
+
 #---------------------------------------------------------------------------------------------------------------------
 def print_menu():
     CRUD_DICT = {1: 'Create phone number', 2: 'Get phone number by name',
@@ -34,13 +26,7 @@ def print_menu():
 
     return choice
 #---------------------------------------------------------------------------------------------------------------------
-def input_phone_number():
-    phone_number = str(raw_input())
 
-    while not phone_number.isdigit():
-        print 'WARN Inocrrect msisdn. Please retry.'
-        phone_number = str(raw_input())
-    return phone_number
 #---------------------------------------------------------------------------------------------------------------------
 class phone_book(object):
     def __init__(self):
@@ -53,8 +39,6 @@ class phone_book(object):
             print 'ERROR Can`t read phonebookDB!'
             self.phone_number_dic = {}
         self.update_phone_db_state_hash()
-
-
 
     def _get_phone_db_state_hash_now(self):
         return hashlib.sha1(json.dumps(self.phone_number_dic)).hexdigest()
@@ -72,19 +56,36 @@ class phone_book(object):
     def save_phone_book_to_file(self):
         # Need to add implementation not to save if file was not changed
         if not self.is_actual():
-            f = open("phonebook.db", 'w')
-            str_to_file = json.dumps(self.phone_number_dic)
-            f.write(str_to_file)
-            f.close()
-            self.update_phone_db_state_hash()
+            with open("phonebook.db", 'w') as f:
+                str_to_file = json.dumps(self.phone_number_dic)
+                f.write(str_to_file)
+                f.close()
+                self.update_phone_db_state_hash()
+
+
+
+    def is_subscriber_exists(self, subscriber):
+        for item_phone, item_customer in self.phone_number_dic.items():
+            if item_customer == subscriber:
+                 return True
+        raise NameError('No such subscriber')
+
+    def is_msisdn_exists(self, msisdn):
+        try:
+            test = self.phone_number_dic[msisdn]
+        except KeyError:
+            raise NameError('No such subscriber')
+
 
 
 
     def load_phone_book_to_file(self):
-        f = open("phonebook.db", 'r')
-        str_to_file = f.read()
-        self.phone_number_dic = json.loads(str_to_file)
-        f.close()
+        with open("phonebook.db", 'r') as f:
+            str_to_file = f.read()
+            self.phone_number_dic = json.loads(str_to_file)
+            f.close()
+
+
 
     def add_new_subscriber(self, phone_number, subscriber):
         """Create phone number'"""
@@ -93,38 +94,132 @@ class phone_book(object):
     def get_phone_book(self):
         return self.phone_number_dic
 
-    @try_is_customer_exists
+
     def get_subscriber_by_phone(self, phone_number):
         """Get customer name by phone"""
-        try:
-            subscriber = self.phone_number_dic[phone_number]
-            return subscriber
-        except:
-            raise NameError('No such subscriber')
+        self.is_msisdn_exists(phone_number)
+
+        subscriber = self.phone_number_dic[phone_number]
+        return subscriber
 
 
-    @try_is_customer_exists
+
+
     def get_phone_by_subscriber(self, subscriber):
         """Get phone number by name"""
+        self.is_subscriber_exists(subscriber)
+
         for item_phone, item_customer in self.phone_number_dic.items():
             if item_customer == subscriber:
                 return (item_phone, item_customer)
-        raise NameError('No such subscriber')
 
-    @try_is_customer_exists
+
+
     def delete_customer_by_name(self, subscriber):
         """Delete phone number by name"""
+        self.is_subscriber_exists(subscriber)
+
         for item_phone, item_customer in self.phone_number_dic.items():
             if item_customer == subscriber:
                 del self.phone_number_dic[item_phone]
-                return ### FIX!!
+                return
         raise NameError('No such subscriber')
 #---------------------------------------------------------------------------------------------------------------------
 
-book = phone_book()
+
+
+#---------------------------------------------------------------------------------------------------------------------
+
+class phone_book_view_controller(object):
+    def __init__(self):
+        self.book = phone_book()
+        self.controller = {1:self._create_phone_number, 2:self._get_phone_by_name, 3: self._get_customer_by_phone, 4: self._delete_by_name, 5: self._show_all}
+
+
+    def catch_name_error(func):
+        def wrapper(self, *args):
+            try:
+                return func(self, *args)
+            except NameError as e:
+                print e
+            except:
+                print 'ERRROR!'
+
+        return wrapper
+
+
+    @catch_name_error
+    def start_action(self, choice):
+        self.controller.get(choice, self._default_choice)()
+
+    def _input_phone_number(self):
+        phone_number = str(raw_input())
+
+        while not phone_number.isdigit():
+            print 'WARN Inocrrect msisdn. Please retry.'
+            phone_number = str(raw_input())
+        return phone_number
+
+    def _default_choice(self):
+        pass
+
+    def _create_phone_number(self):
+        print '1. Please input phone number: '
+        phone_number = self._input_phone_number()
+        print '2. Please input customer name: '
+        customer = raw_input()
+
+        self.book.add_new_subscriber(phone_number, customer)
+
+        print "OK."
+
+    def _get_phone_by_name(self):
+        print '1. Please input customer name: '
+        customer = raw_input()
+
+        subscriber_item = self.book.get_phone_by_subscriber(customer)
+
+        try:
+            print '{}:{}'.format(subscriber_item[0], subscriber_item[1])
+        except TypeError:
+            pass
+
+
+
+    def _get_customer_by_phone(self):
+        print '1. Please input msisdn: '
+        phone_number = self._input_phone_number()
+
+        try:
+            subscriber = self.book.get_subscriber_by_phone(phone_number)
+        except NameError:
+            pass
+
+
+    def _delete_by_name(self):
+        print '1. Please input customer name to delete: '
+        subscriber = raw_input()
+
+        self.book.delete_customer_by_name(subscriber)
+        print 'Subscribers {} phone deleted'.format(subscriber)
+
+
+    def _show_all(self):
+        dic = self.book.get_phone_book()
+        for phone, name in dic.items():
+            print '{}:{}'.format(name, phone)
+
+#---------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
 
 print 'Please choose what to do: '
 choice = 2
+
+controller = phone_book_view_controller()
 
 #---------------------------------------------------------------------------------------------------------------------
 
@@ -132,72 +227,9 @@ while choice != 0:
 
     choice = print_menu()
 
+    controller.start_action(choice)
 
-    """Create phone number'"""
-    if choice == 1:
-        print '1. Please input phone number: '
-        phone_number = input_phone_number()
-        print '2. Please input customer name: '
-        customer = raw_input()
-
-        book.add_new_subscriber(phone_number, customer)
-
-        print "OK."
-
-
-    """Get phone number by name"""
-    if choice == 2:
-        print '1. Please input customer name: '
-        customer = raw_input()
-
-        subscriber_item = book.get_phone_by_subscriber(customer)
-
-        try:
-            print '{}:{}'.format(subscriber_item[0],subscriber_item[1])
-        except TypeError:
-            pass
-
-
-
-    """Get customer name by phone"""
-    if choice == 3:
-        print '1. Please input msisdn: '
-        phone_number = input_phone_number()
-
-        try:
-            subscriber = book.get_subscriber_by_phone(phone_number)
-        except TypeError:
-            pass
-
-
-
-
-    """Delete phone number by name"""
-    if choice == 4:
-        print '1. Please input customer name to delete: '
-        subscriber = raw_input()
-
-        try:
-            book.delete_customer_by_name(subscriber)
-            print 'Subscribers {} phone deleted'.format(subscriber)
-        except TypeError:
-            pass
-
-
-
-
-
-    """Show all phones on a book"""
-    if choice == 5:
-        dic = book.get_phone_book()
-        for phone, name in dic.items():
-            print '{}:{}'.format(name, phone)
-
-
-
-    print book.phone_db_state_hash
-    book.save_phone_book_to_file()
-
+    controller.book.save_phone_book_to_file()
 
     print '-----------------------------------------------------------------'
 
@@ -208,40 +240,6 @@ while choice != 0:
 
 
 
-
-
-
-
-
-
-# Need to do
-#
-# def f_a():
-#     print 'Func a'
-#
-#
-# def f_b():
-#     print 'Func b'
-#
-#
-# def f_c():
-#     print 'Func c'
-#
-#
-# action = raw_input('?')
-#
-#
-#
-# d = {'a': f_a, 'b': f_b, 'c': f_c}
-#
-# def default():
-#     print 'Default'
-#
-# d.get(action, default)()
-
-
-
-# Make phone_number_dic and object contains dictionary
 
 
 
