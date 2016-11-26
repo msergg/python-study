@@ -44,3 +44,47 @@ import pickle
 import os
 os.path.join('a','b','c')
 # a/b/c
+os.path.isdir()
+os.path.isfile()
+
+os.chdir()
+os.rmdir()
+
+os.listdir()
+
+
+for path, dirs, files in os.walk('/usr/lib/gcc'):
+    #print path, dirs, files
+    if 'cc1' in files:
+        print path, files
+
+
+
+
+# pythex
+
+# REGEX
+
+import re
+
+re.findall(r'(?P<msisdn>\+?(38)?0?\d{9})', 'aasdfasa 380632104444 asfasdf 38063210111 asd 38067210457655')
+# (?P<msisdn>\+?(38)?0?\d{9})
+
+r = re.match(r'(?P<msisdn>\+?(38)?0?\d{9})', '380632104444')
+r.groupdict()
+
+
+
+r = re.search(r'(?P<msisdn>\+?(38)?0?\d{9})', 'aasdfasa 380632104444 asfasdf 38063210111 asd 38067210457655')
+print r.groupdict()
+
+
+phone = re.compile(r'(?P<msisdn>\+?(38)?0?\d{9})')
+r = phone.search('aasdfasa 380632104444 asfasdf 38063210111 asd 38067210457655')
+# r.start()
+print r.groupdict()
+print r.start()
+print len('aasdfasa 380632104444 asfasdf 38063210111 asd 38067210457655')
+m = phone.search('aasdfasa 380632104444 asfasdf 38063210111 asd 38067210457655',pos=r.start() + 12)
+
+print m.groupdict()

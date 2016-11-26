@@ -1,15 +1,9 @@
 # coding utf-8
 
-"""
-TEST PROJECT
-
-CRUD
-"""
-
 import json
 import hashlib
 
-#---------------------------------------------------------------------------------------------------------------------
+
 class phone_book(object):
     def __init__(self):
         self.phone_number_dic = {}
@@ -32,8 +26,8 @@ class phone_book(object):
         self.phone_db_state_hash = self._get_phone_db_state_hash_now()
 
     def is_actual(self):
-        return self._get_phone_db_state_hash_last() == self._get_phone_db_state_hash_now()
-
+        return self._get_phone_db_state_hash_last() == \
+               self._get_phone_db_state_hash_now()
 
     def save_phone_book_to_file(self):
         # Need to add implementation not to save if file was not changed
@@ -46,23 +40,14 @@ class phone_book(object):
 
     def load_phone_book_to_file(self):
         with open("phonebook.db", 'r') as f:
-            # for item_phone, item_customer in self.phone_number_dic.items():
-            #     print type(item_customer)
-            #     print item_customer
-            #     self.phone_number_dic[item_phone] = item_customer.encode('utf-8')
-            #     print type(item_customer)
-            #     print item_customer
-
             str_to_file = f.read()
             self.phone_number_dic = json.loads(str_to_file)
             f.close()
 
-
-
     def is_subscriber_exists(self, subscriber):
         for item_phone, item_customer in self.phone_number_dic.items():
             if item_customer == subscriber:
-                 return True
+                return True
         raise NameError('No such subscriber')
 
     def is_msisdn_exists(self, msisdn):
@@ -71,7 +56,6 @@ class phone_book(object):
         except KeyError:
             raise NameError('No such subscriber')
 
-
     def add_new_subscriber(self, phone_number, subscriber):
         """Create phone number'"""
         self.phone_number_dic[phone_number] = subscriber
@@ -79,51 +63,43 @@ class phone_book(object):
     def get_phone_book(self):
         return self.phone_number_dic
 
-
     def get_subscriber_by_phone(self, phone_number):
         """Get customer name by phone"""
         self.is_msisdn_exists(phone_number)
-
         subscriber = self.phone_number_dic[phone_number]
         return subscriber
-
-
-
 
     def get_phone_by_subscriber(self, subscriber):
         """Get phone number by name"""
         self.is_subscriber_exists(subscriber)
-
         for item_phone, item_customer in self.phone_number_dic.items():
             if item_customer == subscriber:
                 return (item_phone, item_customer)
 
-
-
     def delete_customer_by_name(self, subscriber):
         """Delete phone number by name"""
         self.is_subscriber_exists(subscriber)
-
         for item_phone, item_customer in self.phone_number_dic.items():
             if item_customer == subscriber:
                 del self.phone_number_dic[item_phone]
                 return
         raise NameError('No such subscriber')
-#---------------------------------------------------------------------------------------------------------------------
 
-
-
-
-#---------------------------------------------------------------------------------------------------------------------
 
 class phone_book_view_controller(object):
     def __init__(self):
         self.book = phone_book()
-        self.controller = {1:self._create_phone_number, 2:self._get_phone_by_name, 3: self._get_customer_by_phone, 4: self._delete_by_name, 5: self._show_all}
+        self.controller = {1: self._create_phone_number,
+                           2: self._get_phone_by_name,
+                           3: self._get_customer_by_phone,
+                           4: self._delete_by_name,
+                           5: self._show_all}
 
     def print_menu(self):
-        CRUD_DICT = {1: 'Create phone number', 2: 'Get phone number by name',
-                     3: 'Get customer name by phone', 4: 'Delete phone number by name',
+        CRUD_DICT = {1: 'Create phone number',
+                     2: 'Get phone number by name',
+                     3: 'Get customer name by phone',
+                     4: 'Delete phone number by name',
                      5: 'Show all phones on a book',
                      0: 'Exit'}
 
@@ -138,7 +114,6 @@ class phone_book_view_controller(object):
 
         return choice
 
-
     def catch_name_error(func):
         def wrapper(self, *args):
             try:
@@ -149,7 +124,6 @@ class phone_book_view_controller(object):
                 print 'ERRROR!'
 
         return wrapper
-
 
     @catch_name_error
     def start_action(self, choice):
@@ -171,82 +145,55 @@ class phone_book_view_controller(object):
         phone_number = self._input_phone_number()
         print '2. Please input customer name: '
         customer = raw_input()
-
-        self.book.add_new_subscriber(phone_number.decode('utf-8'), customer.decode('utf-8'))
-
+        phone_number_unicode = phone_number.decode('utf-8')
+        customer_unicode = customer.decode('utf-8')
+        self.book.add_new_subscriber(phone_number_unicode, customer_unicode)
         print "OK."
 
     def _get_phone_by_name(self):
         print '1. Please input customer name: '
         customer = raw_input()
-
-        subscriber_item = self.book.get_phone_by_subscriber(customer.decode('utf-8'))
-
+        customer_unicode = customer.decode('utf-8')
+        subscriber_item = self.book.get_phone_by_subscriber(customer_unicode)
+        item_0_u = subscriber_item[0].encode('utf-8')
+        item_1_u = subscriber_item[1].encode('utf-8')
         try:
-            print '{}:{}'.format(subscriber_item[0].encode('utf-8'), subscriber_item[1].encode('utf-8'))
+            print '{}:{}'.format(item_0_u, item_1_u)
         except TypeError:
             pass
-
-
 
     def _get_customer_by_phone(self):
         print '1. Please input msisdn: '
         phone_number = self._input_phone_number()
-
+        phone_number_u = phone_number.decode('utf-8')
         try:
-            subscriber = self.book.get_subscriber_by_phone(phone_number.decode('utf-8'))
+            subscriber = self.book.get_subscriber_by_phone(phone_number_u)
             print subscriber
         except NameError:
             pass
 
-
     def _delete_by_name(self):
         print '1. Please input customer name to delete: '
         subscriber = raw_input()
-
         self.book.delete_customer_by_name(subscriber.decode('utf-8'))
         print 'Subscribers {} phone deleted'.format(subscriber)
 
-
     def _show_all(self):
         dic = self.book.get_phone_book()
+        print '|------Subscriber------|-----Phone number-----|'
+
         for phone, name in dic.items():
-            print '{}:{}'.format(name.encode('utf-8'), phone.encode('utf-8'))
-
-#---------------------------------------------------------------------------------------------------------------------
-
-
-
-
-
+            name_pre_utf = name.center(21).encode('utf-8')
+            phone_pre_utf = phone.center(21).encode('utf-8')
+            print '| {}|{} |'.format(name_pre_utf, phone_pre_utf)
+        print '|----------------------|----------------------|'
 
 print 'Please choose what to do: '
 choice = 2
-
 controller = phone_book_view_controller()
 
-#---------------------------------------------------------------------------------------------------------------------
-
 while choice != 0:
-
     choice = controller.print_menu()
-
     controller.start_action(choice)
-
-
     controller.book.save_phone_book_to_file()
-
     print '-----------------------------------------------------------------'
-
-
-
-
-
-
-
-
-
-
-
-
-
