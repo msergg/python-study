@@ -4,7 +4,7 @@ import json
 import hashlib
 
 
-class phone_book(object):
+class PhoneBook(object):
     def __init__(self):
         self.phone_number_dic = {}
         self.phone_db_state_hash = ''
@@ -86,16 +86,17 @@ class phone_book(object):
         raise NameError('No such subscriber')
 
 
-class phone_book_view_controller(object):
+class PhoneBookViewController(object):
     def __init__(self):
-        self.book = phone_book()
+        self.book = PhoneBook()
         self.controller = {1: self._create_phone_number,
                            2: self._get_phone_by_name,
                            3: self._get_customer_by_phone,
                            4: self._delete_by_name,
                            5: self._show_all}
 
-    def print_menu(self):
+    @staticmethod
+    def print_menu():
         CRUD_DICT = {1: 'Create phone number',
                      2: 'Get phone number by name',
                      3: 'Get customer name by phone',
@@ -129,7 +130,8 @@ class phone_book_view_controller(object):
     def start_action(self, choice):
         self.controller.get(choice, self._default_choice)()
 
-    def _input_phone_number(self):
+    @staticmethod
+    def _input_phone_number():
         phone_number = str(raw_input())
 
         while not phone_number.isdigit():
@@ -190,10 +192,11 @@ class phone_book_view_controller(object):
 
 print 'Please choose what to do: '
 choice = 2
-controller = phone_book_view_controller()
+controller = PhoneBookViewController()
 
 while choice != 0:
-    choice = controller.print_menu()
+
+    choice = PhoneBookViewController().print_menu()
     controller.start_action(choice)
     controller.book.save_phone_book_to_file()
     print '-----------------------------------------------------------------'
