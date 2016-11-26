@@ -8,4 +8,4 @@ controller = PhoneBookViewController()
 while choice != 0:
     choice = PhoneBookViewController().print_menu()
     controller.start_action(choice)
-    print '-----------------------------------------------------------------'
+

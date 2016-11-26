@@ -1,11 +1,22 @@
 from phone_book import PhoneBook
-from phone_book_file_db import PhoneBookFileDb
+from phone_book_file_db_json import PhoneBookFileDbJSON
+from phone_book_file_db_csv import PhoneBookFileDbCSV
+from config import ConfigParameters
 
 
 class PhoneBookViewController(object):
     def __init__(self):
+
+        self.config = ConfigParameters()
+
+        file_type = self.config.get_file_type_value()
         self.book = PhoneBook()
-        self.phone_book_file_db = PhoneBookFileDb()
+
+        if file_type == 'csv':
+            self.phone_book_file_db = PhoneBookFileDbCSV()
+        else:
+            self.phone_book_file_db = PhoneBookFileDbJSON()
+
         self.phone_book_file_db.load_phone_book_from_file(self.book)
 
         self.controller = {1: self._create_phone_number,
@@ -40,14 +51,15 @@ class PhoneBookViewController(object):
                 return func(self, *args)
             except NameError as e:
                 print e
-            except:
-                print 'ERRROR!'
+            # except:
+            #     print 'ERRROR!'
 
         return wrapper
 
     @catch_name_error
     def start_action(self, choice):
         self.controller.get(choice, self._default_choice)()
+        print '-----------------------------------------------------------------'
         self.phone_book_file_db.save_phone_book_to_file(self.book)
 
 
