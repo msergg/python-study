@@ -39,3 +39,8 @@ phone_number_dic = {}
 
 import pickle
 
+
+
+import os
+os.path.join('a','b','c')
+# a/b/c
