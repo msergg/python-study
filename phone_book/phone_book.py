@@ -1,8 +1,10 @@
 # coding utf-8
-
+from config import ConfigParameters
 
 class PhoneBook(object):
     def __init__(self):
+        config = ConfigParameters()
+        self.phone_book_file_db = config.get_phone_book_file_db()
         self.phone_number_dic = {}
 
     def is_subscriber_exists(self, subscriber):
