@@ -31,7 +31,9 @@ class Table(object):
 
 
 class B(object):
-    def f(self):
+    __slots__ = ('x')
+    def __init__(self, x):
+        self.x = x
         print "Class B"
 
 a = A()
@@ -53,3 +55,11 @@ class Cat():
 
     def __str__(self):
         return 'String representation'
+
+
+
+
+
+
+
+

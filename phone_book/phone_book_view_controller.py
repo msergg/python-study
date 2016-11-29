@@ -4,8 +4,8 @@ from phone_book import PhoneBook
 class PhoneBookViewController(object):
     def __init__(self, phone_book_file_db):
         self.book = PhoneBook()
-        phone_book_file_db.load_phone_book_from_file(self.book)
         self.phone_book_file_db = phone_book_file_db
+        phone_book_file_db.load_phone_book_from_file(self.book)
         self.controller = {1: self._create_phone_number,
                            2: self._get_phone_by_name,
                            3: self._get_customer_by_phone,
@@ -38,15 +38,14 @@ class PhoneBookViewController(object):
                 return func(self, *args)
             except NameError as e:
                 print e
-            # except:
-            #     print 'ERRROR!'
+            except:
+                 print 'ERROR!'
 
         return wrapper
 
     @catch_name_error
     def start_action(self, choice):
         self.controller.get(choice, self._default_choice)()
-        print '----------------------------------------------'
         self.phone_book_file_db.save_phone_book_to_file(self.book)
 
     @staticmethod

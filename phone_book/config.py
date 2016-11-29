@@ -1,12 +1,9 @@
 # coding utf-8
 import ConfigParser
 import settings
-
-
 import argparse
 from phone_book_file_db_json import PhoneBookFileDbJSON
 from phone_book_file_db_csv import PhoneBookFileDbCSV
-
 
 
 class ConfigParameters(object):
@@ -30,10 +27,7 @@ class ConfigParameters(object):
         try:
             config = ConfigParser.RawConfigParser()
             config.read(settings.CONFIG_FILE)
-
-
             file_type = config.get('Parameters', 'file_type')
-
             return file_type
         except:
             return settings.DEFAULT_DATA_FILE_FORMAT
