@@ -1,25 +1,11 @@
 # coding utf-8
 from phone_book import PhoneBook
-from phone_book_file_db_json import PhoneBookFileDbJSON
-from phone_book_file_db_csv import PhoneBookFileDbCSV
-from config import ConfigParameters
-
 
 class PhoneBookViewController(object):
-    def __init__(self):
-
-        self.config = ConfigParameters()
-
-        file_type = self.config.get_file_type_value()
+    def __init__(self, phone_book_file_db):
         self.book = PhoneBook()
-
-        if file_type == 'csv':
-            self.phone_book_file_db = PhoneBookFileDbCSV()
-        else:
-            self.phone_book_file_db = PhoneBookFileDbJSON()
-
-        self.phone_book_file_db.load_phone_book_from_file(self.book)
-
+        phone_book_file_db.load_phone_book_from_file(self.book)
+        self.phone_book_file_db = phone_book_file_db
         self.controller = {1: self._create_phone_number,
                            2: self._get_phone_by_name,
                            3: self._get_customer_by_phone,
