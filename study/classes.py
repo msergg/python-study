@@ -128,3 +128,128 @@ class Person(object):
 
 l = [Person('Bob',32), Person('John', 43), Person('Bill', 23)]
 l.sort()
+
+
+
+
+
+
+
+
+
+
+class ReprMixin(object):
+    def __repr__(self):
+        return '{}({})'.format(
+            self.__class__.__name__,
+            ', '.join(['{}={}'.format(k, v) for k, v in self.__dict__.items()])
+        )
+
+
+
+class EqMixin(object):
+    def __eq__(self, other):
+        if not isinstance(other, Person):
+            return NotImplemented
+        return self.__dict__ == other.__dict__
+
+
+
+
+
+
+# mro
+
+class Person(ReprMixin, EqMixin):
+    def __init__(self, name, age):
+
+        self.name, self.age = name, age
+
+    def __getstate__(self):
+        return {
+            'name': self.name,
+            'age': self.age
+
+        }
+
+    def __setstate__(self, state):
+        self.__init__(**state)
+
+
+
+
+# >>> Person('John', 10)
+# Person(age=10, name=John)
+# >>> Person('John', 10) == Person('John', 10)
+# True
+# >>> Person('John', 10) == Person('John', 11)
+# False
+
+
+
+# whois UA https://hostmaster.ua/whois.php?domain=lifecell.ua
+#to parse all parameters in to dict "<td.*>(?<a>.*)<\/td><td>(?<b>.*)<\/td>"
+
+
+import re
+import urllib2
+
+
+def get_whois(url):
+    url = 'https://hostmaster.ua/whois.php?domain=' + url
+    request = urllib2.Request(url)
+    response = urllib2.urlopen(request)
+    html_page = response.read()
+
+    r = re.findall(r'<td.*>(.*)<\/td><td>(.*)<\/td>', html_page)
+
+    print r
+
+    for i in r:
+        print i[0] + ':' + i[1]
+
+
+
+
+get_whois('lifecell.ua')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class MyList(object):
+    def __init__(self, l=[]):
+        self._l = l[:]
+
+    def __repr__(self):
+        return repr(self._l)
+    def __len__(self):
+        return len(self._l)
+
+    def __contains__(self, item):
+        return item in self._l
+    def add(self, value):
+        self._l.append(value)
+
+    def __setitem__(self, key, value):
+        self._l[key] = value
+    def __getitem__(self, item):
+        if isinstance(item, int):
+            return self._l[item]
+        elif isinstance(item, tuple):
+            return [self._l[x] for x in item if 0 <= x < len(self._l) - 1]
+        elif item == Ellipsis:
+            return self._l[:]
+
