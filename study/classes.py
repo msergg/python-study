@@ -253,3 +253,25 @@ class MyList(object):
         elif item == Ellipsis:
             return self._l[:]
 
+
+    def __iter__(self):
+        return MyListIterator(self._l)
+
+
+class MyListIterator(object):
+    def __init__(self, l):
+        self._l = l[:]
+        self.i = 0
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+
+        if self.i ==len(self._l):
+            raise StopIteration
+        self.i += 1
+        return self._l[self.i - 1]
+
+
+
