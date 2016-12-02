@@ -8,12 +8,18 @@ from phone_book_file_db_csv import PhoneBookFileDbCSV
 
 class ConfigParameters(object):
     def __init__(self):
+
+        file_type_args = self.load_args_parameters()
+
         try:
-            file_type = self.get_file_type_value()
+            file_type_cfg = self.get_file_type_value()
         except:
             print "Configuration file is not configuired!"
 
-        file_type = self.load_args_parameters()
+        file_type = file_type_args
+
+        if file_type_args is None:
+            file_type = file_type_cfg
 
         if file_type == 'csv':
             self.phone_book_file_db = PhoneBookFileDbCSV()
@@ -44,6 +50,7 @@ class ConfigParameters(object):
             file_type = args.file_type
             print 'Using: ' + file_type + ' data file format'
             return file_type
+
 
 
 
