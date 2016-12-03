@@ -3,10 +3,6 @@
 class PhoneBook(object):
     def __init__(self):
         self.phone_number_dic = {}
-        # config = ConfigParameters(self)
-        #
-        # self.phone_book_file_db = config.get_phone_book_file_db()
-        # self.load_phone_book_from_dict(self.phone_book_file_db.load_phone_book_from_file())
 
     def is_subscriber_exists(self, subscriber):
         for item_phone, item_customer in self.phone_number_dic.items():
@@ -29,7 +25,6 @@ class PhoneBook(object):
 
     def load_phone_book_from_dict(self, dict):
         self.phone_number_dic = dict
-
 
     def get_subscriber_by_phone(self, phone_number):
         """Get customer name by phone"""

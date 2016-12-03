@@ -371,3 +371,21 @@ def main():
     i = f.send(i + 1)
     print 'main, ' , i
 
+
+
+
+# Constructor / singleton
+
+class A(object):
+    def __new__(cls, *args, **kwargs):
+        print "NEW"
+        if not hasattr(cls, '_instance'):
+            cls._instance = object.__new__(cls, *args)
+        return cls._instance
+
+        # return super(A, cls).__new__(cls, *args, **kwargs)
+
+    def __init__(self):
+        print 'init'
+
+

@@ -2,8 +2,7 @@
 import ConfigParser
 import settings
 import argparse
-from phone_book_file_db_json import PhoneBookFileDbJSON
-from phone_book_file_db_csv import PhoneBookFileDbCSV
+from phone_book_file_db import PhoneBookFileDbFactory
 
 
 class ConfigParameters(object):
@@ -21,10 +20,7 @@ class ConfigParameters(object):
         if file_type_args is None:
             file_type = file_type_cfg
 
-        if file_type == 'csv':
-            self.phone_book_file_db = PhoneBookFileDbCSV()
-        else:
-            self.phone_book_file_db = PhoneBookFileDbJSON()
+        self.phone_book_file_db = PhoneBookFileDbFactory(file_type)
 
     def get_phone_book_file_db(self):
         return self.phone_book_file_db
