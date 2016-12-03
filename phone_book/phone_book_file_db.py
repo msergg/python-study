@@ -4,8 +4,8 @@ import json
 
 
 class PhoneBookFileDb(object):
-    def __init__(self):
-        self.phone_number_dic = {}
+    def __init__(self, book_dict):
+        self.phone_number_dic = book_dict
         self.phone_db_state_hash = ''
         self.update_phone_db_state_hash()
 

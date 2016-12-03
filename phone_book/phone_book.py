@@ -1,11 +1,12 @@
 # coding utf-8
-from config import ConfigParameters
 
 class PhoneBook(object):
     def __init__(self):
-        config = ConfigParameters()
-        self.phone_book_file_db = config.get_phone_book_file_db()
         self.phone_number_dic = {}
+        # config = ConfigParameters(self)
+        #
+        # self.phone_book_file_db = config.get_phone_book_file_db()
+        # self.load_phone_book_from_dict(self.phone_book_file_db.load_phone_book_from_file())
 
     def is_subscriber_exists(self, subscriber):
         for item_phone, item_customer in self.phone_number_dic.items():
@@ -23,14 +24,16 @@ class PhoneBook(object):
         """Create phone number"""
         self.phone_number_dic[phone_number] = subscriber
 
-    def get_phone_book(self):
+    def get_phone_book_dict(self):
         return self.phone_number_dic
+
+    def load_phone_book_from_dict(self, dict):
+        self.phone_number_dic = dict
 
     def get_subscriber_by_phone(self, phone_number):
         """Get customer name by phone"""
         self.is_msisdn_exists(phone_number)
-        subscriber = self.phone_number_dic[phone_number]
-        return subscriber
+        return self.phone_number_dic[phone_number]
 
     def get_phone_by_subscriber(self, subscriber):
         """Get phone number by name"""
@@ -45,5 +48,4 @@ class PhoneBook(object):
         for item_phone, item_customer in self.phone_number_dic.items():
             if item_customer == subscriber:
                 del self.phone_number_dic[item_phone]
-                return
-        raise NameError('No such subscriber')
+

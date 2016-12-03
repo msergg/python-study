@@ -7,7 +7,7 @@ from phone_book_file_db_csv import PhoneBookFileDbCSV
 
 
 class ConfigParameters(object):
-    def __init__(self):
+    def __init__(self, phone_book):
 
         file_type_args = self.load_args_parameters()
 
@@ -22,9 +22,9 @@ class ConfigParameters(object):
             file_type = file_type_cfg
 
         if file_type == 'csv':
-            self.phone_book_file_db = PhoneBookFileDbCSV()
+            self.phone_book_file_db = PhoneBookFileDbCSV(phone_book.get_phone_book_dict())
         else:
-            self.phone_book_file_db = PhoneBookFileDbJSON()
+            self.phone_book_file_db = PhoneBookFileDbJSON(phone_book.get_phone_book_dict())
 
     def get_phone_book_file_db(self):
         return self.phone_book_file_db

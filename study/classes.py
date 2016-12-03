@@ -254,8 +254,15 @@ class MyList(object):
             return self._l[:]
 
 
+    # def __iter__(self):
+    #     return MyListIterator(self._l)
+
     def __iter__(self):
-        return MyListIterator(self._l)
+        # returns generator object
+        for i in self._l:
+            yield i
+
+
 
 
 class MyListIterator(object):
@@ -274,4 +281,93 @@ class MyListIterator(object):
         return self._l[self.i - 1]
 
 
+
+def f():
+    print 'a'
+
+import dis
+
+dis.dis(f)
+
+
+#
+# async - coroutine
+# await - yield
+
+# lazy calculations
+
+def f(x, y):
+    if x:
+        return 2*x*y
+# f (x, g(a,b)) if g(a,b) = > generator
+
+
+def inf_list():
+    i = 0
+    while True:
+        yield i
+        i += 1
+
+for i in inf_list():
+    if i * i > 1000:
+        break
+    print i
+
+
+
+
+g = xrange(10)
+
+i = iter(g)
+i.next()
+
+
+import itertools
+print list(itertools.takewhile(lambda i: i * i <=  100, itertools.count()))
+
+permutations = itertools.permutations('ABC', 2)
+
+print list(permutations)
+
+
+
+[x*x for x in range(10)] # list comprehensions
+
+(x*x for x in range(10)) # generator
+
+
+
+# twsited acsync lib
+
+# aiohttp
+
+
+
+
+# coroutine
+def coroutine(f):
+    g = f()
+    g.next()
+    return g
+
+
+@coroutine
+def f():
+    i = yield
+
+    print 'f,' , i
+    i = yield i + 1
+    print 'f,' , i
+    i = yield i + 1
+    print 'f,' ,i
+    i = yield i + 1
+
+
+def main():
+    i = f.send(0)
+    print 'main, ' , i
+    i = f.send(i + 1)
+    print 'main, ' , i
+    i = f.send(i + 1)
+    print 'main, ' , i
 

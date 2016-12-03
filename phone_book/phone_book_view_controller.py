@@ -1,11 +1,19 @@
 # coding utf-8
 from phone_book import PhoneBook
+from config import ConfigParameters
+
+import settings
 
 
 class PhoneBookViewController(object):
     def __init__(self):
         self.book = PhoneBook()
-        self.book.phone_book_file_db.load_phone_book_from_file(self.book)
+
+        config = ConfigParameters(self.book)
+
+        self.phone_book_file_db = config.get_phone_book_file_db()
+        self.book.load_phone_book_from_dict(self.phone_book_file_db.load_phone_book_from_file())
+
         self.controller = {1: self._create_phone_number,
                            2: self._get_phone_by_name,
                            3: self._get_customer_by_phone,
@@ -28,7 +36,7 @@ class PhoneBookViewController(object):
             choice = int(raw_input('Input your choice:'))
         except ValueError:
             print 'Wrong input!'
-            choice = 9999
+            choice = settings.DEFAULT_CHOICE
 
         return choice
 
@@ -46,7 +54,8 @@ class PhoneBookViewController(object):
     @catch_name_error
     def start_action(self, choice):
         self.controller.get(choice, self._default_choice)()
-        self.book.phone_book_file_db.save_phone_book_to_file(self.book)
+        self.phone_book_file_db.save_phone_book_to_file()
+
 
     @staticmethod
     def _input_phone_number():
@@ -75,8 +84,8 @@ class PhoneBookViewController(object):
         customer = raw_input()
         customer_unicode = customer.decode('utf-8')
         subscriber_item = self.book.get_phone_by_subscriber(customer_unicode)
-        item_0_u = subscriber_item[0].center(21).encode('utf-8')
-        item_1_u = subscriber_item[1].center(21).encode('utf-8')
+        item_0_u = subscriber_item[0].center(settings.CENTER_WIDTH).encode('utf-8')
+        item_1_u = subscriber_item[1].center(settings.CENTER_WIDTH).encode('utf-8')
         try:
             print '|------Subscriber------|-----Phone number-----|'
             print '| {}|{} |'.format(item_0_u, item_1_u)
@@ -90,8 +99,8 @@ class PhoneBookViewController(object):
         phone_number_u = phone_number.decode('utf-8')
         try:
             subscriber = self.book.get_subscriber_by_phone(phone_number_u)
-            phone_number_unicode = phone_number.center(21).decode('utf-8')
-            subscriber_unicode = subscriber.center(21).decode('utf-8')
+            phone_number_unicode = phone_number.center(settings.CENTER_WIDTH).decode('utf-8')
+            subscriber_unicode = subscriber.center(settings.CENTER_WIDTH).decode('utf-8')
             print '|------Subscriber------|-----Phone number-----|'
             print '| {}|{} |'.format(subscriber_unicode, phone_number_unicode)
             print '|----------------------|----------------------|'
@@ -105,11 +114,11 @@ class PhoneBookViewController(object):
         print 'Subscribers {} phone deleted'.format(subscriber)
 
     def _show_all(self):
-        dic = self.book.get_phone_book()
+        dic = self.book.get_phone_book_dict()
         print '|------Subscriber------|-----Phone number-----|'
 
         for phone, name in dic.items():
-            name_pre_utf = name.center(21).encode('utf-8')
-            phone_pre_utf = phone.center(21).encode('utf-8')
+            name_pre_utf = name.center(settings.CENTER_WIDTH).encode('utf-8')
+            phone_pre_utf = phone.center(settings.CENTER_WIDTH).encode('utf-8')
             print '| {}|{} |'.format(name_pre_utf, phone_pre_utf)
         print '|----------------------|----------------------|'
