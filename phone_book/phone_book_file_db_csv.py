@@ -5,17 +5,15 @@ import settings
 
 
 class PhoneBookFileDbCSV(PhoneBookFileDb):
-    def save_phone_book_to_file(self):
-        if not self.is_actual():
-            with open(settings.CSV_DB_DATA_FILE, 'wb') as csvfile:
-                writer = csv.writer(csvfile,
-                                    delimiter=',',
-                                    quotechar='|',
-                                    quoting=csv.QUOTE_MINIMAL)
-                for msisdn, subscriber in self.phone_number_dic.items():
-                    writer.writerow([msisdn, subscriber])
-                csvfile.close()
-                self.update_phone_db_state_hash()
+    def save_phone_book_to_file(self, phone_book):
+        with open(settings.CSV_DB_DATA_FILE, 'wb') as csvfile:
+            writer = csv.writer(csvfile,
+                                delimiter=',',
+                                quotechar='|',
+                                quoting=csv.QUOTE_MINIMAL)
+            for msisdn, subscriber in phone_book.get_phone_book_dict().items():
+                writer.writerow([msisdn, subscriber])
+            csvfile.close()
 
     def load_phone_book_from_file(self):
         try:
@@ -27,5 +25,4 @@ class PhoneBookFileDbCSV(PhoneBookFileDb):
                 csvfile.close()
                 return self.phone_number_dic
         except:
-            with open(settings.CSV_DB_DATA_FILE, 'w') as csvfile:
-                csvfile.close()
+            return {}

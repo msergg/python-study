@@ -30,6 +30,7 @@ class PhoneBook(object):
     def load_phone_book_from_dict(self, dict):
         self.phone_number_dic = dict
 
+
     def get_subscriber_by_phone(self, phone_number):
         """Get customer name by phone"""
         self.is_msisdn_exists(phone_number)

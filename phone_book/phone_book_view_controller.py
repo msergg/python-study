@@ -7,12 +7,11 @@ import settings
 
 class PhoneBookViewController(object):
     def __init__(self):
-        self.book = PhoneBook()
-
-        config = ConfigParameters(self.book)
-
+        config = ConfigParameters()
         self.phone_book_file_db = config.get_phone_book_file_db()
-        self.book.load_phone_book_from_dict(self.phone_book_file_db.load_phone_book_from_file())
+        dict = self.phone_book_file_db.load_phone_book_from_file()
+        self.book = PhoneBook()
+        self.book.load_phone_book_from_dict(dict)
 
         self.controller = {1: self._create_phone_number,
                            2: self._get_phone_by_name,
@@ -54,8 +53,7 @@ class PhoneBookViewController(object):
     @catch_name_error
     def start_action(self, choice):
         self.controller.get(choice, self._default_choice)()
-        self.phone_book_file_db.save_phone_book_to_file()
-
+        self.phone_book_file_db.save_phone_book_to_file(self.book)
 
     @staticmethod
     def _input_phone_number():

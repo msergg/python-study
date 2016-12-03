@@ -5,13 +5,11 @@ import settings
 
 
 class PhoneBookFileDbJSON(PhoneBookFileDb):
-    def save_phone_book_to_file(self):
-        if not self.is_actual():
-            with open(settings.JSON_DB_DATA_FILE, 'w') as f:
-                str_to_file = json.dumps(self.phone_number_dic)
-                f.write(str_to_file)
-                f.close()
-                self.update_phone_db_state_hash()
+    def save_phone_book_to_file(self, phone_book):
+        with open(settings.JSON_DB_DATA_FILE, 'w') as f:
+            str_to_file = json.dumps(phone_book.get_phone_book_dict())
+            f.write(str_to_file)
+            f.close()
 
     def load_phone_book_from_file(self):
         try:
@@ -21,5 +19,4 @@ class PhoneBookFileDbJSON(PhoneBookFileDb):
                 f.close()
                 return self.phone_number_dic
         except:
-            with open(settings.JSON_DB_DATA_FILE, 'w') as f:
-                f.close()
+            return {}
