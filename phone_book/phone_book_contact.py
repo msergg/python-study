@@ -112,3 +112,4 @@ list1  = phonebook()
 a.get_object_to_save()
 a.phone_starts_with('3806321')
 a.subscriber_name_starts_with('User')
+print list1

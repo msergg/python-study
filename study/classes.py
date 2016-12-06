@@ -32,15 +32,15 @@ class Table(object):
 
 class B(object):
     __slots__ = ('x')
+
     def __init__(self, x):
         self.x = x
         print "Class B"
 
+
 a = A()
 a.f()
 b = B()
-
-
 
 
 # Polymorphism , magic methods
@@ -57,16 +57,8 @@ class Cat():
         return 'String representation'
 
 
-
-
-
-
-
-
 @staticmethod
 @classmethod
-
-
 class A(object):
     def __init__(self):
         self.a = 42
@@ -83,7 +75,6 @@ class A(object):
             raise AttributeError('a is read-only')
         super(A, self).__delattr__(name)
 
-
     def __getattribute__(self, name):
         print "Get attribute " + name
         return super(A, self).__getattribute__(name)
@@ -95,7 +86,7 @@ class A(object):
 
 class Mock(object):
     def __getattr__(self, item):
-        return lambda x: x*x
+        return lambda x: x * x
 
 
 #
@@ -126,16 +117,8 @@ class Person(object):
         return self.age < other.age
 
 
-l = [Person('Bob',32), Person('John', 43), Person('Bill', 23)]
+l = [Person('Bob', 32), Person('John', 43), Person('Bill', 23)]
 l.sort()
-
-
-
-
-
-
-
-
 
 
 class ReprMixin(object):
@@ -146,7 +129,6 @@ class ReprMixin(object):
         )
 
 
-
 class EqMixin(object):
     def __eq__(self, other):
         if not isinstance(other, Person):
@@ -154,15 +136,10 @@ class EqMixin(object):
         return self.__dict__ == other.__dict__
 
 
-
-
-
-
 # mro
 
 class Person(ReprMixin, EqMixin):
     def __init__(self, name, age):
-
         self.name, self.age = name, age
 
     def __getstate__(self):
@@ -176,8 +153,6 @@ class Person(ReprMixin, EqMixin):
         self.__init__(**state)
 
 
-
-
 # >>> Person('John', 10)
 # Person(age=10, name=John)
 # >>> Person('John', 10) == Person('John', 10)
@@ -188,7 +163,7 @@ class Person(ReprMixin, EqMixin):
 
 
 # whois UA https://hostmaster.ua/whois.php?domain=lifecell.ua
-#to parse all parameters in to dict "<td.*>(?<a>.*)<\/td><td>(?<b>.*)<\/td>"
+# to parse all parameters in to dict "<td.*>(?<a>.*)<\/td><td>(?<b>.*)<\/td>"
 
 
 import re
@@ -209,24 +184,7 @@ def get_whois(url):
         print i[0] + ':' + i[1]
 
 
-
-
 get_whois('lifecell.ua')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 class MyList(object):
@@ -235,16 +193,19 @@ class MyList(object):
 
     def __repr__(self):
         return repr(self._l)
+
     def __len__(self):
         return len(self._l)
 
     def __contains__(self, item):
         return item in self._l
+
     def add(self, value):
         self._l.append(value)
 
     def __setitem__(self, key, value):
         self._l[key] = value
+
     def __getitem__(self, item):
         if isinstance(item, int):
             return self._l[item]
@@ -253,7 +214,6 @@ class MyList(object):
         elif item == Ellipsis:
             return self._l[:]
 
-
     # def __iter__(self):
     #     return MyListIterator(self._l)
 
@@ -261,8 +221,6 @@ class MyList(object):
         # returns generator object
         for i in self._l:
             yield i
-
-
 
 
 class MyListIterator(object):
@@ -274,16 +232,15 @@ class MyListIterator(object):
         return self
 
     def next(self):
-
-        if self.i ==len(self._l):
+        if self.i == len(self._l):
             raise StopIteration
         self.i += 1
         return self._l[self.i - 1]
 
 
-
 def f():
     print 'a'
+
 
 import dis
 
@@ -298,7 +255,9 @@ dis.dis(f)
 
 def f(x, y):
     if x:
-        return 2*x*y
+        return 2 * x * y
+
+
 # f (x, g(a,b)) if g(a,b) = > generator
 
 
@@ -308,33 +267,28 @@ def inf_list():
         yield i
         i += 1
 
+
 for i in inf_list():
     if i * i > 1000:
         break
     print i
-
-
-
 
 g = xrange(10)
 
 i = iter(g)
 i.next()
 
-
 import itertools
-print list(itertools.takewhile(lambda i: i * i <=  100, itertools.count()))
+
+print list(itertools.takewhile(lambda i: i * i <= 100, itertools.count()))
 
 permutations = itertools.permutations('ABC', 2)
 
 print list(permutations)
 
+[x * x for x in range(10)]  # list comprehensions
 
-
-[x*x for x in range(10)] # list comprehensions
-
-(x*x for x in range(10)) # generator
-
+(x * x for x in range(10))  # generator
 
 
 # twsited acsync lib
@@ -355,23 +309,21 @@ def coroutine(f):
 def f():
     i = yield
 
-    print 'f,' , i
+    print 'f,', i
     i = yield i + 1
-    print 'f,' , i
+    print 'f,', i
     i = yield i + 1
-    print 'f,' ,i
+    print 'f,', i
     i = yield i + 1
 
 
 def main():
     i = f.send(0)
-    print 'main, ' , i
+    print 'main, ', i
     i = f.send(i + 1)
-    print 'main, ' , i
+    print 'main, ', i
     i = f.send(i + 1)
-    print 'main, ' , i
-
-
+    print 'main, ', i
 
 
 # Constructor / singleton
@@ -389,3 +341,57 @@ class A(object):
         print 'init'
 
 
+class Line(object):
+    def __init__(self):
+        self._l = 0
+
+    @property
+    def l(self):
+        return self._l * 10
+
+    @l.setter
+    def l(self, value):
+        self._l = value / 10
+
+
+# Metaclasses
+A = type('A', (object,), {'a': 1})
+
+
+class A(object):
+    a = 1
+
+
+class Meta(type):
+    def __new__(cls, name, parents, attrs):
+        new_attrs = {name: value
+                     for name, value in attrs.items()
+                     if not name.startswith('unused')}
+
+        return type.__new__(cls, name, parents, new_attrs)
+
+
+class A(object):
+    __metaclass__ = Meta
+
+    a = 1
+    unused_a = 1
+
+
+import abc
+
+
+class Base(object):
+    __metaclass__ = abc.ABCMeta
+
+    def f(self):
+        print 'Base.f'
+
+    @abc.abstractmethod
+    def g(self):
+        pass
+
+
+class Child(Base):
+    def g(self):
+        pass
