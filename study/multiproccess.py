@@ -62,4 +62,4 @@ def get(url):
 
 p = multiprocessing.Pool(20)
 
-print p.map(get, ['http://lifecell.ua/uk/'] * 100)
+print p.map(get, ['http://lifecell.ua/uk/'] * 1000)
