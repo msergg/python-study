@@ -35,7 +35,7 @@ def handle(c):
 
 s = socket.socket()
 
-s.bind(('0.0.0.0', 8021))
+s.bind(('0.0.0.0', 8000))
 
 s.listen(5)
 print "Server started"

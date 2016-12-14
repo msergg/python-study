@@ -1,5 +1,5 @@
 # coding utf-8
-from phone_book.phone_book_view_controller import PhoneBookViewController
+#from phone_book.phone_book_view_controller import PhoneBookViewController
 
 from phone_book.phone_book_view_controller_network import PhoneBookViewControllerNet
 import phone_book.settings
@@ -13,11 +13,14 @@ import select
 
 
 
+is_finished = False
 
 def handle(c):
     controller = PhoneBookViewControllerNet()
     choice = phone_book.settings.DEFAULT_CHOICE
+
     controller.set_socket(c)
+
 
     while choice != phone_book.settings.EXIT:
         choice = controller.print_menu()
@@ -26,6 +29,13 @@ def handle(c):
     controller.print_to_socket('Good bye! :)')
 
     c.close()
+    connections.remove(c)
+
+
+
+
+
+
 
 
 
@@ -34,14 +44,11 @@ def handle(c):
 
 s = socket.socket()
 
-s.bind(('0.0.0.0', 8018))
+s.bind(('0.0.0.0', 8019))
 
 s.listen(5)
 
 s.setblocking(False)
-print "Server started"
-
-
 
 connections = [s]
 
@@ -54,7 +61,7 @@ try:
                 c, a = s.accept()
                 connections.append(c)
                 print "Connected", a
-
+                handle(c)
             else:
                 handle(reading_socket)
 

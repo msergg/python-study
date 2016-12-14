@@ -1,19 +1,30 @@
 # coding utf-8
 from phone_book import PhoneBook
+from phone_book_sqlite import PhoneBookSQLite
 from config import ConfigParameters
 
 import settings
 
 class PhoneBookViewControllerNet(object):
-    def __init__(self):
+    def __init__(self, filedb = False):
 
-        
+        self.filedb = filedb
 
-        config = ConfigParameters()
-        self.phone_book_file_db = config.get_phone_book_file_db()
-        dict = self.phone_book_file_db.load_phone_book_from_file()
-        self.book = PhoneBook()
-        self.book.load_phone_book_from_dict(dict)
+        if self.filedb:
+            self.book = PhoneBook()
+            config = ConfigParameters()
+            self.phone_book_file_db = config.get_phone_book_file_db()
+            dict = self.phone_book_file_db.load_phone_book_from_file()
+
+            self.book.load_phone_book_from_dict(dict)
+
+        else:
+            self.book = PhoneBookSQLite()
+
+
+
+
+
 
         self.controller = {1: self._create_phone_number,
                            2: self._get_phone_by_name,
@@ -45,6 +56,7 @@ class PhoneBookViewControllerNet(object):
             self.print_to_socket(str(str(i) + " : " + text ))
 
         try:
+
             # choice = int(raw_input('Input your choice:'))
             choice = int(self.socket_input())
         except ValueError:
@@ -67,7 +79,9 @@ class PhoneBookViewControllerNet(object):
     @catch_name_error
     def start_action(self, choice):
         self.controller.get(choice, self._default_choice)()
-        self.phone_book_file_db.save_phone_book_to_file(self.book)
+
+        if self.filedb:
+            self.phone_book_file_db.save_phone_book_to_file(self.book)
 
     
     def _input_phone_number(self):
