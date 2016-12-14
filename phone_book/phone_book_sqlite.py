@@ -46,7 +46,7 @@ class PhoneBookSQLite(object):
 
     def get_phone_by_subscriber(self, subscriber):
         """Get phone number by name"""
-        c = PhoneBookSQLite.con.execute("select msisdn, subscriber from subscribers_book where subscriber = '{}';".format(subscriber))
+        c = PhoneBookSQLite.con.execute("select subscriber, msisdn from subscribers_book where subscriber = '{}';".format(subscriber))
         return c.fetchone()
 
     def delete_customer_by_name(self, subscriber):
