@@ -33,15 +33,6 @@ def handle(c):
 
 
 
-
-
-
-
-
-
-
-
-
 s = socket.socket()
 
 s.bind(('0.0.0.0', 8015))
