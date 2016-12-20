@@ -120,3 +120,19 @@ parser1 = sax.make_parser()
 
 parser1.setContentHandler(MyHandler())
 parser1.parse(open('tasks.xml', 'r'))
+
+
+# ctypes - import C dlls
+# https://docs.python.org/2/library/ctypes.html
+
+
+
+
+
+
+
+
+
+
+
+
