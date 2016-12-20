@@ -76,6 +76,21 @@ doc.getElementsByTagName('task')[0].firstChild.toxml()
 
 
 
+from xml.dom import pulldom
+
+
+doc = pulldom.parse('tasks.xml')
+
+for event, node in doc:
+    if event == pulldom.START_ELEMENT and node.tagName == 'task':
+        doc.expandNode(node)
+        print node.toxml()
+
+
+
+
+
+
 
 
 
