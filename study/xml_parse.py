@@ -94,3 +94,29 @@ for event, node in doc:
 
 
 
+# sax
+from xml import sax
+
+class MyHandler(sax.ContentHandler):
+    def startElement(self, name, attrs):
+        if name == 'task':
+            self.task = True
+
+    def characters(self, content):
+        if self.task:
+            content = 'test'
+            print content
+
+    def endElement(self, name):
+        if name == 'task':
+            self.task = False
+
+    def __init__(self):
+        self.task = False
+
+
+
+parser1 = sax.make_parser()
+
+parser1.setContentHandler(MyHandler())
+parser1.parse(open('tasks.xml', 'r'))
