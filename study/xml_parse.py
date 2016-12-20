@@ -55,3 +55,27 @@ print doc.findall('.//task')[0].text
 from xml.dom import minidom
 
 doc = minidom.parse('tasks.xml')
+
+doc.childNodes[0].tagName
+
+doc.getElementsByTagName('task')[0].toxml()
+
+doc.getElementsByTagName('task')[0].firstChild.toxml()
+
+
+
+
+
+#insertChild
+#removeChild
+#writexml
+
+
+
+
+
+
+
+
+
+
