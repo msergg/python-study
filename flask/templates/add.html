@@ -1,0 +1,26 @@
+{% extends 'index.html' %}
+{% block content %}
+
+<h1>Add new item</h1>
+
+<form method='post'>
+    <input type="text" name="name" placeholder="Name" value="{{name}}">
+    <input type="text" name="phone" placeholder="Phone" value="{{phone}}">
+    <input type="submit" value="OK">
+
+</form>
+
+
+
+
+<br>
+<a href="/">Go back</a>
+
+{% endblock %}
+
+
+
+
+{% block footer %}
+
+{% endblock %}
