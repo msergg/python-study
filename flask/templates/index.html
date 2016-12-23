@@ -9,7 +9,25 @@
 
 {% block content %}
 <p><a href="/add">Add</a></p>
+
+
+
+<form action="/alter" method="post">
+<ul style="list-style: none;">
+    {% for name, phone in contacts %}
+    <li><input  type="radio" name="id" value="{{name}}" {% if loop.index == 1 %}checked{% endif %}>
+
+        {{name}} - {{phone}} </li>
+
+    {% endfor %}
+    <input type="submit" value="Delete" name="del">
+    <input type="submit" value="Update" name="upd">
+</ul>
+</form>
+
+<p style='color:red'>{{message}}</p>
 {% endblock %}
+
 
 
 {% block footer %}

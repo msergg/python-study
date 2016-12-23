@@ -1,0 +1,24 @@
+{% extends 'index.html' %}
+
+{% block content %}
+
+<h1>Delete</h1>
+
+
+<p>Deleting {{name}}. Are you sure?</p>
+
+<form method='post'>
+    <input type="hidden" value="{{name}}" name="name">
+    <input type="submit" value="yes" name="yes">
+    <input type="submit" value="no" name="no">
+</form>
+
+
+
+
+<br>
+<a href="/">Go back</a>
+
+{% endblock %}
+
+
