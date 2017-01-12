@@ -1,0 +1,43 @@
+{% extends 'index.html' %}
+
+{% block content %}
+
+
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+
+<h1>Товар: {{product.name}} </h1>
+<p>Цена: ${{product.price}}</p>
+<p>Опис: ${{product.desc}}</p>
+
+<h2>Comments</h2>
+
+<p>
+    {% for comment in comments %}
+
+    <p><b>{{comment.name}} ({{comment.email}})</b><p>
+    <p>{{comment.comment}}<p>
+ <hr>
+    {% empty %}
+    No comments yet...
+    {% endfor %}
+</p>
+
+
+<form method="post">
+{% csrf_token %}
+{{ form.as_p }}
+
+    <input type="submit" value="OK">
+</form>
+
+{% endblock %}
+
+

@@ -6,16 +6,54 @@
 </head>
 <body>
 
+
+{% block content%}
+
 <h1>My e-shop</h1>
+{% if user.is_authenticated %}
+{{user}} <a href="{% url 'logout' %}">Logout</a>
+{% else %}
+<a href="login">Login</a>
+{% endif %}
+
+<p>
+    <form method="get">
+        <input type="text" placeholder="Search..." name="q">
+        <input type="submit" value="Ok">
+    </form>
+</p>
+
+<p>{% if products.has_previous %}
+    <a href="/?page={{products.previous_page_number}}{%if q%}&amp;q={{q}} {% endif %}"> << </a>
+    {% endif %}
+
+     {{products.number}}
+
+    {% if products.has_next %}
+     <a href="/?page={{products.next_page_number}}{% if q %}&amp;q={{q}} {% endif %}"> >> </a>
+    {% endif %}
+
+</p>
+
+
+
+
 <ul>
     {% for product in products %}
         <li>
-            <h2>{{product.name}}</h2>
+
+            <h2><a href="/products/detail/{{product.pk}}">{{product.name}}</a></h2>
+
             <p>${{product.price}}</p>
             <p>{{product.desc}}</p>
         </li>
+
+    {% empty %}
+    Nothing was found...
     {%endfor%}
 </ul>
+
+{% endblock %}
 
 
 
