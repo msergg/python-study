@@ -1,4 +1,6 @@
 # coding=utf-8
+from random import randint
+
 
 from django.core.paginator import Paginator
 from django.http.response import HttpResponse, Http404
@@ -8,7 +10,7 @@ from django.contrib import messages
 
 from .models import Comment
 from .models import Product
-from .forms import CommentForm
+from .forms import CommentForm, CommentModelForm
 
 
 
@@ -17,7 +19,10 @@ from .forms import CommentForm
 def index(request):
 
 
-    all_products = Product.objects.all()
+    all_products = Product.available.all()
+
+    if 'k' not in request.session:
+        request.session['k'] = randint(1000, 100000)
 
     if 'q' in request.GET:
         all_products = all_products.filter(name__contains=request.GET['q'])
@@ -26,7 +31,8 @@ def index(request):
 
     return render(request, 'index.html', {
             'products' : product,
-            'q':request.GET.get('q','')
+            'q':request.GET.get('q',''),
+            'k':request.session['k']
     } )
 
 
@@ -80,3 +86,27 @@ def detail(request, product_id):
         'comments': comments,
         'messages': messages.get_messages(request)
     })
+
+
+
+def edit_comments(request, comment_id):
+    comment = get_object_or_404(Comment, pk=int(comment_id))
+
+    product = get_object_or_404(Product, comment=comment_id)
+
+    form = CommentModelForm(instance=comment)
+
+    if request.method == 'POST':
+        form = CommentModelForm(request.POST)
+        if form.is_valid():
+            comment = form.save()
+            comment.id = int(comment_id)
+            comment.product = product
+            comment.save()
+            return redirect('/products/edit/{}'.format(comment_id))
+
+    return render(request, 'edit_comment.html', {
+        'form' : form,
+        'product': comment.product
+    })
+

@@ -15,13 +15,15 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from django.views.generic.list import ListView
 from products.views import index
 from accounts.views import logout_,login_
 
-
+from products.models import Product
 
 urlpatterns = [
     url(r'^$', index, name='index'),
+    url(r'^list/$', ListView.as_view(model=Product, paginate_by=2), name='list'),
     url(r'^logout/$', logout_, name='logout'),
     url(r'^login/$', login_, name='login'),
     url(r'^admin/', admin.site.urls),

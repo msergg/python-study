@@ -6,10 +6,15 @@
 </head>
 <body>
 
+<p> Currency: {{rate}} grn/$ </p>
 
 {% block content%}
 
 <h1>My e-shop</h1>
+<p>Session: {{k}}</p>
+
+
+
 {% if user.is_authenticated %}
 {{user}} <a href="{% url 'logout' %}">Logout</a>
 {% else %}
