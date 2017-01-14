@@ -1,7 +1,7 @@
 # coding=utf-8
 from random import randint
 
-
+from django.core.mail import send_mail
 from django.core.paginator import Paginator
 from django.http.response import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect
@@ -11,6 +11,8 @@ from django.contrib import messages
 from .models import Comment
 from .models import Product
 from .forms import CommentForm, CommentModelForm
+
+from .tasks import send_order
 
 
 
@@ -109,4 +111,15 @@ def edit_comments(request, comment_id):
         'form' : form,
         'product': comment.product
     })
+
+
+
+
+def order(request, product_id):
+    product = get_object_or_404(Product, pk=int(product_id))
+
+    send_order.delay(request.user.email, product.name)
+
+    messages.info(request, 'Order was sent')
+    return redirect('/products/detail/{}'.format(product_id))
 
