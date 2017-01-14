@@ -28,3 +28,5 @@ class MyPeriodicTask(PeriodicTask):
         print "My Task"
 
 
+# ssh
+# pip install paramiko
